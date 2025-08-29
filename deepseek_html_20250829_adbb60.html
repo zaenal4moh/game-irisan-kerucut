@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Identifikasi Irisan Kerucut</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .score-item {
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        .equation-box {
+            background-color: #e9ecef;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .equation {
+            font-size: 2rem;
+            color: #1a2a6c;
+            font-family: 'Cambria Math', serif;
+            margin: 15px 0;
+        }
+        
+        .instruction {
+            color: #6c757d;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .option-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4a6fc3;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .option-btn:hover {
+            background-color: #3b5998;
+            transform: translateY(-3px);
+        }
+        
+        .feedback {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            min-height: 30px;
+            font-weight: bold;
+        }
+        
+        .correct {
+            color: #28a745;
+        }
+        
+        .incorrect {
+            color: #dc3545;
+        }
+        
+        .next-btn {
+            padding: 12px 30px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .next-btn:hover {
+            background-color: #218838;
+        }
+        
+        .conic-info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .conic-info h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .conic-info ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .conic-info li {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .equation {
+                font-size: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Game Identifikasi Irisan Kerucut</h1>
+        
+        <div class="score-board">
+            <div class="score-item">Skor: <span id="score">0</span></div>
+            <div class="score-item">Pertanyaan: <span id="question-count">0</span></div>
+        </div>
+        
+        <div class="equation-box">
+            <p class="instruction">Identifikasi jenis irisan kerucut dari persamaan berikut:</p>
+            <div class="equation" id="equation">(x - 2)² + (y + 3)² = 16</div>
+        </div>
+        
+        <div class="options">
+            <button class="option-btn" data-type="lingkaran">Lingkaran</button>
+            <button class="option-btn" data-type="elips">Elips</button>
+            <button class="option-btn" data-type="parabola">Parabola</button>
+            <button class="option-btn" data-type="hiperbola">Hiperbola</button>
+        </div>
+        
+        <div class="feedback" id="feedback"></div>
+        
+        <button class="next-btn" id="next-btn">Soal Berikutnya</button>
+        
+        <div class="conic-info">
+            <h3>Ciri-ciri Persamaan Irisan Kerucut:</h3>
+            <ul>
+                <li><strong>Lingkaran:</strong> Bentuk umum x² + y² = r² atau (x-h)² + (y-k)² = r²</li>
+                <li><strong>Elips:</strong> Bentuk umum (x-h)²/a² + (y-k)²/b² = 1</li>
+                <li><strong>Parabola:</strong> Bentuk umum y² = 4px atau x² = 4py</li>
+                <li><strong>Hiperbola:</strong> Bentuk umum (x-h)²/a² - (y-k)²/b² = 1 atau (y-k)²/a² - (x-h)²/b² = 1</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Variabel game
+        let score = 0;
+        let questionCount = 0;
+        let currentEquation = '';
+        let currentType = '';
+        let answered = false;
+        
+        // Elemen DOM
+        const equationElement = document.getElementById('equation');
+        const scoreElement = document.getElementById('score');
+        const questionCountElement = document.getElementById('question-count');
+        const feedbackElement = document.getElementById('feedback');
+        const nextButton = document.getElementById('next-btn');
+        const optionButtons = document.querySelectorAll('.option-btn');
+        
+        // Fungsi untuk menghasilkan persamaan acak
+        function generateEquation() {
+            const conicTypes = ["lingkaran", "elips", "parabola", "hiperbola"];
+            const conicType = conicTypes[Math.floor(Math.random() * conicTypes.length)];
+            
+            let equation = '';
+            
+            if (conicType === "lingkaran") {
+                const h = Math.floor(Math.random() * 9) - 4;
+                const k = Math.floor(Math.random() * 9) - 4;
+                const r = Math.floor(Math.random() * 7) + 2;
+                
+                equation = `(x ${h >= 0 ? '-' : '+'} ${Math.abs(h)})² + (y ${k >= 0 ? '-' : '+'} ${Math.abs(k)})² = ${r}²`;
+            }
+            else if (conicType === "elips") {
+                const h = Math.floor(Math.random() * 5) - 2;
+                const k = Math.floor(Math.random() * 5) - 2;
+                const a = Math.floor(Math.random() * 5) + 3;
+                const b = Math.floor(Math.random() * 4) + 2;
+                
+                equation = `(x ${h >= 0 ? '-' : '+'} ${Math.abs(h)})²/${a}² + (y ${k >= 0 ? '-' : '+'} ${Math.abs(k)})²/${b}² = 1`;
+            }
+            else if (conicType === "parabola") {
+                // Parabola horizontal atau vertikal
+                if (Math.random() > 0.5) {
+                    const h = Math.floor(Math.random() * 5) - 2;
+                    const k = Math.floor(Math.random() * 5) - 2;
+                    const p = Math.floor(Math.random() * 4) + 1;
+                    
+                    equation = `(y ${k >= 0 ? '-' : '+'} ${Math.abs(k)})² = ${4*p}(x ${h >= 0 ? '-' : '+'} ${Math.abs(h)})`;
+                } else {
+                    const h = Math.floor(Math.random() * 5) - 2;
+                    const k = Math.floor(Math.random() * 5) - 2;
+                    const p = Math.floor(Math.random() * 4) + 1;
+                    
+                    equation = `(x ${h >= 0 ? '-' : '+'} ${Math.abs(h)})² = ${4*p}(y ${k >= 0 ? '-' : '+'} ${Math.abs(k)})`;
+                }
+            }
+            else if (conicType === "hiperbola") {
+                // Hiperbola horizontal atau vertikal
+                if (Math.random() > 0.5) {
+                    const h = Math.floor(Math.random() * 5) - 2;
+                    const k = Math.floor(Math.random() * 5) - 2;
+                    const a = Math.floor(Math.random() * 4) + 2;
+                    const b = Math.floor(Math.random() * 4) + 2;
+                    
+                    equation = `(x ${h >= 0 ? '-' : '+'} ${Math.abs(h)})²/${a}² - (y ${k >= 0 ? '-' : '+'} ${Math.abs(k)})²/${b}² = 1`;
+                } else {
+                    const h = Math.floor(Math.random() * 5) - 2;
+                    const k = Math.floor(Math.random() * 5) - 2;
+                    const a = Math.floor(Math.random() * 4) + 2;
+                    const b = Math.floor(Math.random() * 4) + 2;
+                    
+                    equation = `(y ${k >= 0 ? '-' : '+'} ${Math.abs(k)})²/${a}² - (x ${h >= 0 ? '-' : '+'} ${Math.abs(h)})²/${b}² = 1`;
+                }
+            }
+            
+            return { equation, conicType };
+        }
+        
+        // Fungsi untuk memulai soal baru
+        function newQuestion() {
+            const { equation, conicType } = generateEquation();
+            equationElement.textContent = equation;
+            currentEquation = equation;
+            currentType = conicType;
+            answered = false;
+            
+            feedbackElement.textContent = '';
+            feedbackElement.className = 'feedback';
+            
+            nextButton.style.display = 'none';
+        }
+        
+        // Fungsi untuk menangani jawaban
+        function handleAnswer(userType) {
+            if (answered) return;
+            
+            answered = true;
+            questionCount++;
+            questionCountElement.textContent = questionCount;
+            
+            if (userType === currentType) {
+                score++;
+                scoreElement.textContent = score;
+                feedbackElement.textContent = 'Benar! +1 poin';
+                feedbackElement.className = 'feedback correct';
+            } else {
+                feedbackElement.textContent = `Salah! Jawaban benar: ${currentType.charAt(0).toUpperCase() + currentType.slice(1)}`;
+                feedbackElement.className = 'feedback incorrect';
+            }
+            
+            nextButton.style.display = 'inline-block';
+        }
+        
+        // Event listeners untuk tombol pilihan
+        optionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                handleAnswer(button.dataset.type);
+            });
+        });
+        
+        // Event listener untuk tombol berikutnya
+        nextButton.addEventListener('click', newQuestion);
+        
+        // Inisialisasi game
+        newQuestion();
+    </script>
+</body>
+</html>
